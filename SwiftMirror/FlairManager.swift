@@ -9,19 +9,23 @@
 import UIKit
 
 class FlairManager {
-    var flairImages = Array<UIImage>()
+    var flairImages = Array<UIImage?>()
 
     init() {
         let imageNames = ["crown1", "crown2", "moustache1", "moustache2", "moustache3", "moustache4", "moustache5", "moustache6", "moustache7", "moustache8"];
         flairImages = imageNames.map {
-            (name:String) -> (UIImage) in
+            (name:String) -> (UIImage?) in
             return UIImage(named: name)
         }
     }
 
     func getAnImage() -> (UIImage) {
         let imageIndex = (random() % flairImages.count)
-        return flairImages[imageIndex]
+        if let val = flairImages[imageIndex] {
+            return val
+        } else {
+            return getAnImage()
+        }
     }
 }
 

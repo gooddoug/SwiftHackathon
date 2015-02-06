@@ -12,8 +12,8 @@ import Social
 
 class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
                             
-    @IBOutlet var imageView: UIImageView
-    @IBOutlet var saveButton: UIBarButtonItem
+    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var saveButton: UIBarButtonItem!
 
     var flair: FlairView?
 
@@ -44,7 +44,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         } else {
             picker.sourceType = .PhotoLibrary
         }
-        self.presentModalViewController(picker, animated: true)
+        self.presentViewController(picker, animated: true) {}
     }
     
     @IBAction func addFlair(sender: AnyObject) {
@@ -71,14 +71,14 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
 
         flair = FlairView(frame:imageFrame)
         flair!.image = flairImage
-        imageView.addSubview(flair)
+        imageView.addSubview(flair!)
     }
 
     @IBAction func save(sender: AnyObject) {
         if let composedImage = composeFinalImage() {
             let accountStore = ACAccountStore()
             let twitterAccountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
-            accountStore.requestAccessToAccountsWithType(twitterAccountType) {
+            accountStore.requestAccessToAccountsWithType(twitterAccountType, options: nil) {
                 granted, error in
                 if granted {
                     println("booyah")
@@ -91,7 +91,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                         if res.statusCode > 199 && res.statusCode < 300 {
                             println("Woot")
                             let responseDict = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as? NSDictionary
-                            println("Tweet saved with tweet id: \(responseDict.description)")
+                            println("Tweet saved with tweet id: \(responseDict)")
                         } else {
                             println("error sedning tweet - \(res.statusCode): \(error)")
                         }
@@ -112,7 +112,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     }
 
     func imagePickerController(controller:UIImagePickerController, didFinishPickingImage image:UIImage, editingInfo:NSDictionary) {
-        controller.dismissModalViewControllerAnimated(true)
+        controller.dismissViewControllerAnimated(true){}
         imageView.image = image
     }
 }
